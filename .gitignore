@@ -28,4 +28,4 @@ mlruns/
 .ipynb_checkpoints/
 
 # Logs
-*.log
+*.loggit commit -m "Create project structure and gitignore"
