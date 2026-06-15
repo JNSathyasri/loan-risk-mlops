@@ -5,9 +5,13 @@ venv/
 __pycache__/
 *.pyc
 
-# Dataset
-data/raw/
-data/processed/
+# Dataset contents
+data/raw/*
+data/processed/*
+
+# Allow DVC metadata files
+!data/raw/*.dvc
+!data/processed/*.dvc
 
 # Models
 models/
@@ -28,4 +32,4 @@ mlruns/
 .ipynb_checkpoints/
 
 # Logs
-*.loggit commit -m "Create project structure and gitignore"
+*.log
