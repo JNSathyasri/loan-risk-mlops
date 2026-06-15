@@ -1,10 +1,26 @@
 import os
 import pickle
+import yaml
 
 import pandas as pd
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
+
+
+print("Loading parameters.")
+
+with open("params.yaml", "r") as f:
+    params = yaml.safe_load(f)
+
+test_size = params["train"]["test_size"]
+random_state = params["train"]["random_state"]
+
+model_type = params["model"]["model_type"]
+
+n_estimators = params["random_forest"]["n_estimators"]
+
+print("Parameters loaded successfully.")
 
 print("Loading processed dataset.")
 
@@ -21,21 +37,30 @@ print("Creating train-test split.")
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
-    test_size=0.2,
-    random_state=42,
+    test_size=test_size,
+    random_state=random_state,
     stratify=y
 )
 
 print(f"Training samples: {len(X_train)}")
 print(f"Testing samples: {len(X_test)}")
 
-print("Training Random Forest model.")
+# Model Selection
+if model_type == "random_forest":
 
-model = RandomForestClassifier(
-    n_estimators=100,
-    random_state=42
-)
+    print("Training Random Forest model.")
 
+    model = RandomForestClassifier(
+        n_estimators=n_estimators,
+        random_state=random_state
+    )
+
+else:
+    raise ValueError(
+        f"Unsupported model type: {model_type}"
+    )
+
+# Train model
 model.fit(X_train, y_train)
 
 print("Model trained successfully.")
@@ -51,13 +76,16 @@ with open(model_path, "wb") as f:
 
 print(f"Model saved to: {model_path}")
 
-# Save test dataset for evaluation stage
+# Save test dataset
 test_df = X_test.copy()
 test_df["Loan_Approved"] = y_test
 
 test_path = "data/processed/test_data.csv"
 
-test_df.to_csv(test_path, index=False)
+test_df.to_csv(
+    test_path,
+    index=False
+)
 
 print(f"Test dataset saved to: {test_path}")
 
