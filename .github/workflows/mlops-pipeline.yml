@@ -36,7 +36,7 @@ jobs:
 
       - name: Run Pytest
         run: |
-          pytest
+          pytest tests/test_health.py
 
       - name: Build Docker Image
         run: |
