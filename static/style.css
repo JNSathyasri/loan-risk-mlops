@@ -1,0 +1,258 @@
+body{
+    background: #eef2f7;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* ===========================
+   HERO SECTION
+=========================== */
+
+.hero-card{
+
+    background:
+    linear-gradient(
+        135deg,
+        #1e3c72,
+        #2a5298
+    );
+
+    color: white;
+
+    padding: 35px;
+
+    border-radius: 25px;
+
+    margin-bottom: 30px;
+
+    text-align: center;
+
+    box-shadow:
+    0 12px 30px rgba(
+        0,
+        0,
+        0,
+        0.18
+    );
+
+}
+
+.hero-card h1{
+
+    font-weight: 700;
+
+    margin-bottom: 10px;
+
+}
+
+.hero-card p{
+
+    font-size: 18px;
+
+    opacity: 0.9;
+
+}
+
+/* ===========================
+   KPI CARDS
+=========================== */
+
+.card{
+
+    border: none;
+
+    border-radius: 20px;
+
+    box-shadow:
+    0 6px 20px rgba(
+        0,
+        0,
+        0,
+        0.08
+    );
+
+    transition: 0.3s;
+
+}
+
+.card:hover{
+
+    transform: translateY(-4px);
+
+    box-shadow:
+    0 12px 28px rgba(
+        0,
+        0,
+        0,
+        0.12
+    );
+
+}
+
+.card h3{
+
+    font-weight: 700;
+
+    color: #0d6efd;
+
+}
+
+/* ===========================
+   FORM
+=========================== */
+
+.form-control{
+
+    border-radius: 12px;
+
+    padding: 12px;
+
+}
+
+.form-control:focus{
+
+    border-color: #0d6efd;
+
+    box-shadow:
+    0 0 0 0.15rem
+    rgba(
+        13,
+        110,
+        253,
+        0.25
+    );
+
+}
+
+/* ===========================
+   BUTTON
+=========================== */
+
+.btn-primary{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0d6efd,
+        #0dcaf0
+    );
+
+    border: none;
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    font-weight: 600;
+
+    font-size: 16px;
+
+}
+
+.btn-primary:hover{
+
+    background:
+    linear-gradient(
+        135deg,
+        #0b5ed7,
+        #0aa2c0
+    );
+
+}
+
+/* ===========================
+   RESULT CARD
+=========================== */
+
+#resultCard{
+
+    min-height: 170px;
+
+}
+
+#result{
+
+    font-size: 30px;
+
+    font-weight: bold;
+
+    text-align: center;
+
+    padding: 25px;
+
+}
+
+/* ===========================
+   APPROVED STATE
+=========================== */
+
+.approved{
+
+    background:
+    linear-gradient(
+        135deg,
+        #d1fae5,
+        #a7f3d0
+    ) !important;
+
+    color: #065f46;
+
+}
+
+/* ===========================
+   REJECTED STATE
+=========================== */
+
+.rejected{
+
+    background:
+    linear-gradient(
+        135deg,
+        #fee2e2,
+        #fecaca
+    ) !important;
+
+    color: #991b1b;
+
+}
+
+/* ===========================
+   SYSTEM STATUS
+=========================== */
+
+.status-green{
+
+    color: #16a34a;
+
+    font-weight: bold;
+
+}
+
+/* ===========================
+   ANIMATION
+=========================== */
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity: 0;
+
+        transform: translateY(10px);
+
+    }
+
+    to{
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+}
+
+#result{
+
+    animation: fadeIn 0.5s ease-in-out;
+
+}
