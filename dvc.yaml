@@ -1,0 +1,30 @@
+stages:
+
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+      - src/preprocess.py
+      - data/raw/loan_prediction_dataset.csv
+    outs:
+      - data/processed/processed_data.csv
+      - models/label_encoder.pkl
+
+  train:
+    cmd: python src/train.py
+    deps:
+      - src/train.py
+      - data/processed/processed_data.csv
+      - params.yaml
+    outs:
+      - models/model.pkl
+      - data/processed/test_data.csv
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - src/evaluate.py
+      - models/model.pkl
+      - data/processed/test_data.csv
+    outs:
+      - reports/metrics/confusion_matrix.png
+      - reports/metrics/metrics.json

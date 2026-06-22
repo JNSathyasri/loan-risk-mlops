@@ -1,0 +1,70 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+    - path: data/raw/loan_prediction_dataset.csv
+      hash: md5
+      md5: 2f060f2086aceca89635216ac2ceedce
+      size: 71022
+    - path: src/preprocess.py
+      hash: md5
+      md5: e737125241fc780be1d4020de42f69d5
+      size: 959
+    outs:
+    - path: data/processed/processed_data.csv
+      hash: md5
+      md5: eb6f89f900d7081ada56dadb0d6c4fd8
+      size: 54447
+    - path: models/label_encoder.pkl
+      hash: md5
+      md5: 25864802bf9b0acd15b96caf93954c99
+      size: 283
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/processed/processed_data.csv
+      hash: md5
+      md5: eb6f89f900d7081ada56dadb0d6c4fd8
+      size: 54447
+    - path: params.yaml
+      hash: md5
+      md5: b3206c92ddf1a8e39ceb780b504d68a9
+      size: 170
+    - path: src/train.py
+      hash: md5
+      md5: f2aa1ad07cc6a6da2cb3df642c9b6171
+      size: 1914
+    outs:
+    - path: data/processed/test_data.csv
+      hash: md5
+      md5: 3800b25f968ce79a9535091f2e065eda
+      size: 10950
+    - path: models/model.pkl
+      hash: md5
+      md5: 3a1c41e6eff7fd9fa38dc522456bab30
+      size: 415061
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: data/processed/test_data.csv
+      hash: md5
+      md5: 3800b25f968ce79a9535091f2e065eda
+      size: 10950
+    - path: models/model.pkl
+      hash: md5
+      md5: 3a1c41e6eff7fd9fa38dc522456bab30
+      size: 415061
+    - path: src/evaluate.py
+      hash: md5
+      md5: bd604436738e5975c98a9e053806dd3f
+      size: 1550
+    outs:
+    - path: reports/metrics/confusion_matrix.png
+      hash: md5
+      md5: c0b53124e0fed4301ad0f02da04de8b2
+      size: 12470
+    - path: reports/metrics/metrics.json
+      hash: md5
+      md5: 3a488a03a71e6235559b4d08cccf0ab4
+      size: 123

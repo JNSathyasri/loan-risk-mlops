@@ -1,9 +1,13 @@
 import json
 import os
 import pickle
+import yaml
 
 import matplotlib.pyplot as plt
 import pandas as pd
+
+import mlflow
+import mlflow.sklearn
 
 from sklearn.metrics import (
     accuracy_score,
@@ -21,6 +25,13 @@ with open("models/model.pkl", "rb") as f:
 
 print("Model loaded successfully.")
 
+print("Loading parameters.")
+
+with open("params.yaml", "r") as f:
+    params = yaml.safe_load(f)
+
+print("Parameters loaded successfully.")
+
 print("Loading test dataset.")
 
 df = pd.read_csv("data/processed/test_data.csv")
@@ -28,7 +39,7 @@ df = pd.read_csv("data/processed/test_data.csv")
 X_test = df.drop("Loan_Approved", axis=1)
 y_test = df["Loan_Approved"]
 
-print("Generating predictions")
+print("Generating predictions.")
 
 y_pred = model.predict(X_test)
 
@@ -72,5 +83,70 @@ plt.savefig(
 plt.close()
 
 print("Confusion matrix saved.")
+
+# MLFLOW TRACKING
+
+mlflow.set_experiment("Loan_Risk_Prediction")
+
+with mlflow.start_run():
+
+    # Parameters
+    mlflow.log_param(
+        "model_type",
+        params["model"]["model_type"]
+    )
+
+    mlflow.log_param(
+        "test_size",
+        params["train"]["test_size"]
+    )
+
+    mlflow.log_param(
+        "random_state",
+        params["train"]["random_state"]
+    )
+
+    mlflow.log_param(
+        "n_estimators",
+        params["random_forest"]["n_estimators"]
+    )
+
+    # Metrics
+    mlflow.log_metric(
+        "accuracy",
+        accuracy
+    )
+
+    mlflow.log_metric(
+        "precision",
+        precision
+    )
+
+    mlflow.log_metric(
+        "recall",
+        recall
+    )
+
+    mlflow.log_metric(
+        "f1_score",
+        f1
+    )
+
+    # Model
+    mlflow.sklearn.log_model(
+        model,
+        artifact_path="model"
+    )
+
+    # Artifacts
+    mlflow.log_artifact(
+        "reports/metrics/metrics.json"
+    )
+
+    mlflow.log_artifact(
+        "reports/metrics/confusion_matrix.png"
+    )
+
+print("MLflow tracking completed.")
 
 print("Evaluation completed successfully.")
