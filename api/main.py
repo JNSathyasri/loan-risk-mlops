@@ -2,6 +2,8 @@ import pickle
 
 import pandas as pd
 
+import logging
+
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -9,10 +11,39 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 
+from prometheus_client import (
+    Counter,
+    generate_latest,
+    CONTENT_TYPE_LATEST
+)
+
+from fastapi import Response
+
 app = FastAPI(
     title="Loan Approval Prediction API",
     description="Production Loan Approval System",
     version="2.0"
+)
+
+TOTAL_REQUESTS = Counter(
+    "total_requests",
+    "Total API Requests"
+)
+
+PREDICTION_REQUESTS = Counter(
+    "prediction_requests",
+    "Total Prediction Requests"
+)
+
+HEALTH_REQUESTS = Counter(
+    "health_requests",
+    "Total Health Requests"
+)
+
+logging.basicConfig(
+    filename="loan_api.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 templates = Jinja2Templates(
@@ -42,6 +73,10 @@ def load_artifacts():
         or scaler is None
         or encoders is None
     ):
+
+        logging.info(
+            "Loading model artifacts"
+        )
 
         print("Loading production model...")
 
@@ -122,6 +157,11 @@ async def dashboard(
 
 @app.get("/health")
 def health():
+    TOTAL_REQUESTS.inc()
+    HEALTH_REQUESTS.inc()
+    logging.info(
+        "Health endpoint called"
+    )
 
     return {
         "status": "healthy"
@@ -131,8 +171,13 @@ def health():
 @app.post("/predict")
 def predict(data: LoanRequest):
 
-    load_artifacts()
+    TOTAL_REQUESTS.inc()
+    PREDICTION_REQUESTS.inc()
 
+    load_artifacts()
+    logging.info(
+        "Prediction request received"
+    )
     gender = encoders["Gender"].transform(
         [data.Gender]
     )[0]
@@ -199,8 +244,21 @@ def predict(data: LoanRequest):
         max(probabilities) * 100,
         2
     )
+    logging.info(
+        f"Prediction result: {result}"
+    )
 
+    logging.info(
+        f"Confidence: {confidence}"
+    )
     return {
         "result": result,
         "confidence": confidence
     }
+@app.get("/metrics")
+def metrics():
+
+    return Response(
+        generate_latest(),
+        media_type=CONTENT_TYPE_LATEST
+    )
