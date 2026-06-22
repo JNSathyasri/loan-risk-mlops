@@ -1,30 +1,43 @@
 stages:
 
   preprocess:
-    cmd: python src/preprocess.py
+
+    cmd: python src/preprocess_v2.py
+
     deps:
-      - src/preprocess.py
-      - data/raw/loan_prediction_dataset.csv
+      - src/preprocess_v2.py
+      - data/raw/loan_data.csv
+
     outs:
-      - data/processed/processed_data.csv
-      - models/label_encoder.pkl
+      - data/processed/processed_data_v2.csv
 
   train:
-    cmd: python src/train.py
+    cmd: python src/train_final.py
+
     deps:
-      - src/train.py
-      - data/processed/processed_data.csv
+      - src/train_final.py
+      - data/processed/processed_data_v2.csv
       - params.yaml
+
+    params:
+      - train.test_size
+      - train.random_state
+      - model.model_type
+      - logistic_regression.max_iter
+
     outs:
-      - models/model.pkl
-      - data/processed/test_data.csv
+      - models/final_model.pkl
+      - models/scaler.pkl
+      - data/processed/test_data_v2.csv
 
   evaluate:
+
     cmd: python src/evaluate.py
+
     deps:
       - src/evaluate.py
-      - models/model.pkl
-      - data/processed/test_data.csv
+      - models/final_model.pkl
+      - data/processed/processed_data_v2.csv
+
     outs:
-      - reports/metrics/confusion_matrix.png
-      - reports/metrics/metrics.json
+      - reports/final_model_metrics.json

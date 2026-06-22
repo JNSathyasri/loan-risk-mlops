@@ -1,6 +1,7 @@
 import json
 import os
 import pickle
+import yaml
 
 import pandas as pd
 
@@ -20,6 +21,11 @@ print("Loading processed dataset...")
 df = pd.read_csv(
     "data/processed/processed_data_v2.csv"
 )
+
+with open("params.yaml", "r") as f:
+    params = yaml.safe_load(f)
+
+max_iter = params["logistic_regression"]["max_iter"]
 
 # -------------------------
 # FEATURES / TARGET
@@ -45,6 +51,20 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # -------------------------
+# SAVE TEST DATASET
+# -------------------------
+
+test_df = X_test.copy()
+test_df["Loan_Status"] = y_test
+
+test_df.to_csv(
+    "data/processed/test_data_v2.csv",
+    index=False
+)
+
+print("Test dataset saved.")
+
+# -------------------------
 # FEATURE SCALING
 # -------------------------
 
@@ -67,7 +87,7 @@ X_test_scaled = scaler.transform(
 print("Training final model...")
 
 model = LogisticRegression(
-    max_iter=5000
+    max_iter=max_iter
 )
 
 model.fit(

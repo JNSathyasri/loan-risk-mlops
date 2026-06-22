@@ -3,11 +3,7 @@ train:
   random_state: 42
 
 model:
-  model_type: random_forest
+  model_type: logistic_regression
 
-random_forest:
-  n_estimators: 100
-  random_state: 42
-
-smote:
-  enabled: false
+logistic_regression:
+  max_iter: 5000
