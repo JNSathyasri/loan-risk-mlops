@@ -13,11 +13,17 @@ data/processed/*
 !data/raw/*.dvc
 !data/processed/*.dvc
 
-# Models
-models/
+# Models contents
+models/*
+
+# Allow DVC metadata files
+!models/*.dvc
+!models/encoders/
+!models/encoders/**
 
 # MLflow
 mlruns/
+mlflow.db
 
 # DVC
 .dvc/cache/
