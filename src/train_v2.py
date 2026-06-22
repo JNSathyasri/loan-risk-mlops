@@ -1,5 +1,4 @@
 import os
-import pickle
 
 import mlflow
 import mlflow.sklearn

@@ -158,16 +158,3 @@ def predict(data: LoanRequest):
         "result": result,
         "confidence": confidence
     }
-
-    # prediction = int(
-    #     model.predict(
-    #         input_scaled
-    #     )[0]
-    # )
-
-
-
-    # return {
-    #     "prediction": prediction,
-    #     "result": result
-    # }
