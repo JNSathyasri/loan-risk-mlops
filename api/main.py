@@ -25,25 +25,69 @@ app.mount(
     name="static"
 )
 
-print("Loading production model...")
 
-with open("models/final_model.pkl", "rb") as f:
-    model = pickle.load(f)
+model = None
+scaler = None
+encoders = None
 
-print("Loading scaler...")
 
-with open("models/scaler.pkl", "rb") as f:
-    scaler = pickle.load(f)
+def load_artifacts():
 
-print("Loading encoders...")
+    global model
+    global scaler
+    global encoders
 
-with open(
-    "models/encoders/encoders.pkl",
-    "rb"
-) as f:
-    encoders = pickle.load(f)
+    if (
+        model is None
+        or scaler is None
+        or encoders is None
+    ):
 
-print("API Ready.")
+        print("Loading production model...")
+
+        with open(
+            "models/final_model.pkl",
+            "rb"
+        ) as f:
+            model = pickle.load(f)
+
+        print("Loading scaler...")
+
+        with open(
+            "models/scaler.pkl",
+            "rb"
+        ) as f:
+            scaler = pickle.load(f)
+
+        print("Loading encoders...")
+
+        with open(
+            "models/encoders/encoders.pkl",
+            "rb"
+        ) as f:
+            encoders = pickle.load(f)
+
+        print("Artifacts loaded successfully.")
+
+# print("Loading production model...")
+
+# with open("models/final_model.pkl", "rb") as f:
+#     model = pickle.load(f)
+
+# print("Loading scaler...")
+
+# with open("models/scaler.pkl", "rb") as f:
+#     scaler = pickle.load(f)
+
+# print("Loading encoders...")
+
+# with open(
+#     "models/encoders/encoders.pkl",
+#     "rb"
+# ) as f:
+#     encoders = pickle.load(f)
+
+# print("API Ready.")
 
 
 class LoanRequest(BaseModel):
@@ -86,6 +130,8 @@ def health():
 
 @app.post("/predict")
 def predict(data: LoanRequest):
+
+    load_artifacts()
 
     gender = encoders["Gender"].transform(
         [data.Gender]
