@@ -255,6 +255,8 @@ def predict(data: LoanRequest):
         "result": result,
         "confidence": confidence
     }
+
+
 @app.get("/metrics")
 def metrics():
 
