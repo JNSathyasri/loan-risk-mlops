@@ -38,6 +38,12 @@ jobs:
         run: |
           pytest tests/test_health.py
 
+      - name: Run Trivy Security Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+
       - name: Build Docker Image
         run: |
           docker build -t loan-risk-api .
